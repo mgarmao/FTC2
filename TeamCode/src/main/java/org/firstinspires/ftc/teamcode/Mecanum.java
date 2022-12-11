@@ -20,7 +20,6 @@ public class Mecanum extends OpMode {
     private DcMotor back_left   = null;
     private DcMotor back_right  = null;
     private DcMotor elevator  = null;
-    private Servo grabber = null;
     Servo   servo;
 
     int ServoPosition = 1;
@@ -47,18 +46,23 @@ public class Mecanum extends OpMode {
 
     @Override
     public void loop() {
-        double drive  = Math.pow(gamepad1.left_stick_x,5/3);
-        double strafe = Math.pow(gamepad1.left_stick_y,5/3);
-        double twist  = Math.pow(gamepad1.right_stick_x,5/3);
+//        double drive  = -Math.pow(gamepad1.left_stick_x,5.0/3);
+//        double strafe = Math.pow(gamepad1.left_stick_y,5.0/3);
+//        double twist  = -Math.pow(gamepad1.right_stick_x,5.0/3);
+
+        double drive  = Math.pow(-gamepad1.left_stick_x,1.67);
+        double strafe = Math.pow(gamepad1.left_stick_y,1.67);
+        double twist  = Math.pow(-gamepad1.right_stick_x,1.67);
+
 
         if(gamepad1.a){
             ServoPosition=1;
-            servo.setPosition(0);
+            servo.setPosition(0.25);
         }
 
         if(gamepad1.b){
             ServoPosition=0;
-            servo.setPosition(0.15);
+            servo.setPosition(0.08);
         }
 
 
@@ -90,17 +94,21 @@ public class Mecanum extends OpMode {
 
 
         // 300 units per rotation
-        float elavatorPower=(gamepad1.right_trigger-gamepad1.left_trigger)*5/8;
-        if(elevator.getCurrentPosition()<=800&&elevator.getCurrentPosition()>=0){
-            elevator.setPower(elavatorPower);
-        }
-        if(elevator.getCurrentPosition()>=800){
-            elevator.setPower(-gamepad1.left_trigger);
-        }
-        if(elevator.getCurrentPosition()<=0){
-            elevator.setPower(gamepad1.right_trigger);
-        }
+        float elavatorPower=(gamepad1.right_trigger-gamepad1.left_trigger);
+        elevator.setPower(elavatorPower*0.50);
+//        if(elevator.getCurrentPosition()<=800&&elevator.getCurrentPosition()>=0){
+//            elevator.setPower(elavatorPower);
+//        }
+//        if(elevator.getCurrentPosition()>=800){
+//            elevator.setPower(-gamepad1.left_trigger);
+//        }
+//        if(elevator.getCurrentPosition()<=0){
+//            elevator.setPower(gamepad1.right_trigger);
+//        }
 
+        telemetry.addData("driveValure",drive);
+        telemetry.addData("strafe",strafe);
+        telemetry.addData("twist",twist);
         telemetry.addData("A Value:",gamepad1.a);
         telemetry.addData("B Value:",gamepad1.b);
         telemetry.addData("Commanded Servo Position:",ServoPosition);

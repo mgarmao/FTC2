@@ -1,15 +1,17 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Movement;
+
 @Autonomous(name = "Auto1")
 public class Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 3600 ;
     static final double     DRIVE_GEAR_REDUCTION    = 12.0 ;
@@ -47,16 +49,15 @@ public class Auto1 extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        front_left.setPower(0.4);
-        front_right.setPower(0.4);
-        back_left.setPower(0.4);
-        back_right.setPower(0.4);
+        front_left.setPower(-0.5);
+        front_right.setPower(0.5);
+        back_left.setPower(0.5);
+        back_right.setPower(- 0.5);
 
-        sleep(1500);
+        sleep(990);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
