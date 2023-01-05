@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 // Class for the robot's movement
 public class Movement {
@@ -15,15 +19,15 @@ public class Movement {
     private static final double DISTANCE_PER_REVOLUTION = 3 * Math.PI;
     private static final int ticksPerRevolution = 420;
     // Distance the robot should move
-    private static final double DISTANCE = 1.0; // 1 foot
+    private static final double DISTANCE = 12.0; // 1 foot
 
     // Constructor for the movement class
     public Movement(HardwareMap hardwareMap) {
         // Initialize the motors
-        frontLeftMotor = hardwareMap.dcMotor.get("motor_left");
-        backLeftMotor = hardwareMap.dcMotor.get("motor_left");
-        frontRightMotor = hardwareMap.dcMotor.get("motor_left");
-        backRightMotor = hardwareMap.dcMotor.get("motor_right");
+        frontLeftMotor = hardwareMap.dcMotor.get("FrontL0");
+        backLeftMotor = hardwareMap.dcMotor.get("BackL2");
+        frontRightMotor = hardwareMap.dcMotor.get("FrontR1");
+        backRightMotor = hardwareMap.dcMotor.get("BackR3");
 
         // Set the direction of the motors
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -36,13 +40,14 @@ public class Movement {
     // Method to move the robot forward 1 foot
     public void moveForward() {
         // Calculate the number of revolutions the wheels need to turn
-        int revolutions = (int) ((DISTANCE/DISTANCE_PER_REVOLUTION)*ticksPerRevolution);
+        int revolutions = (int) ((DISTANCE/DISTANCE_PER_REVOLUTION)*420);
 
         // Set the target position for the motors
         frontLeftMotor.setTargetPosition(revolutions);
-        backLeftMotor.setTargetPosition(revolutions);
-        frontRightMotor.setTargetPosition(revolutions);
+        backLeftMotor.setTargetPosition(-revolutions);
+        frontRightMotor.setTargetPosition(-revolutions);
         backRightMotor.setTargetPosition(revolutions);
+
 
         // Set the motors to run to the target position
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -51,10 +56,12 @@ public class Movement {
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Set the speed of the motors
-        frontLeftMotor.setPower(-0.5);
+        frontLeftMotor.setPower(0.5);
         backLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
-        backRightMotor.setPower(- 0.5);
+        backRightMotor.setPower(0.5);
+
+
 
         // Wait for the motors to stop moving
         while (frontLeftMotor.isBusy() && frontRightMotor.isBusy()) {
@@ -87,9 +94,10 @@ public class Movement {
 
         // Set the speed of the motors
         frontLeftMotor.setPower(-0.5);
-        backLeftMotor.setPower(0.5);
-        frontRightMotor.setPower(0.5);
-        backRightMotor.setPower(- 0.5);
+        backLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(-0.5);
+        backRightMotor.setPower(-0.5);
+
 
         // Wait for the motors to stop moving
         while (frontLeftMotor.isBusy() && frontRightMotor.isBusy()) {

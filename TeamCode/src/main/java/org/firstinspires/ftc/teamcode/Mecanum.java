@@ -50,9 +50,9 @@ public class Mecanum extends OpMode {
 //        double strafe = Math.pow(gamepad1.left_stick_y,5.0/3);
 //        double twist  = -Math.pow(gamepad1.right_stick_x,5.0/3);
 
-        double drive  = Math.pow(-gamepad1.left_stick_x,1.67);
-        double strafe = Math.pow(gamepad1.left_stick_y,1.67);
-        double twist  = Math.pow(-gamepad1.right_stick_x,1.67);
+        double drive  = -gamepad1.left_stick_x;
+        double strafe = gamepad1.left_stick_y;
+        double twist  = gamepad1.right_stick_x;
 
 
         if(gamepad1.a){
