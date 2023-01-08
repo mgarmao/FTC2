@@ -32,7 +32,7 @@ public class STA extends OpMode {
         backRight  = hardwareMap.get(DcMotor.class, "motor2");
         elevator   = hardwareMap.get(DcMotor.class, "elevator");
         elevatorZero =elevator.getCurrentPosition();
-        servo = hardwareMap.get(Servo.class, "Servo0");
+        servo = hardwareMap.get(Servo.class, "Servo1");
 
         backRight.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -41,17 +41,18 @@ public class STA extends OpMode {
     @Override
     public void loop() {
         double drive  = gamepad1.left_stick_y;
+        drive=drive*-1;
         double twist  = gamepad1.right_stick_x;
 
 
-        if(gamepad1.a){
+        if(gamepad2.a){
             ServoPosition=1;
-            servo.setPosition(0.25);
+            servo.setPosition(0.2);
         }
 
-        if(gamepad1.b){
+        if(gamepad2.b){
             ServoPosition=0;
-            servo.setPosition(0.08);
+            servo.setPosition(-0.7);
         }
 
 
@@ -69,10 +70,10 @@ public class STA extends OpMode {
 
 
         // 300 units per rotation
-        float elavatorPower=(gamepad1.right_trigger-gamepad1.left_trigger);
+        float elavatorPower=(gamepad2.right_trigger-gamepad2.left_trigger);
         elevator.setPower(elavatorPower);
 
-        telemetry.addData("Gampad1 Left X",gamepad1.left_stick_x);
+        telemetry.addData("Gampad1 Left Y",gamepad1.left_stick_y);
         telemetry.addData("Gampad2 Left X",gamepad2.left_stick_x);
         telemetry.update();
     }
