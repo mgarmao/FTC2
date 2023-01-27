@@ -46,24 +46,49 @@ public class Mecanum extends OpMode {
 
     @Override
     public void loop() {
-//        double drive  = -Math.pow(gamepad1.left_stick_x,5.0/3);
-//        double strafe = Math.pow(gamepad1.left_stick_y,5.0/3);
-//        double twist  = -Math.pow(gamepad1.right_stick_x,5.0/3);
+        double drive;
+        double strafe;
+        double twist;
+        if(gamepad1.left_stick_x<0){
+            drive  = Math.pow(-gamepad1.left_stick_x+0.3,5);
+            drive=-drive;
+        }
+        else{
+            drive  = Math.pow(gamepad1.left_stick_x+0.3,5);
+        }
 
-        double drive  = -gamepad1.left_stick_x;
-        double strafe = gamepad1.left_stick_y;
-        double twist  = gamepad1.right_stick_x;
+        if(gamepad1.left_stick_y<0){
+            strafe  = Math.pow(-gamepad1.left_stick_y+0.3,5);
+            strafe=-strafe;
+        }
+        else{
+            strafe  = Math.pow(gamepad1.left_stick_y+0.3,5);
+        }
+
+        if(gamepad1.right_stick_x<0){
+            twist  = Math.pow(-gamepad1.right_stick_x+0.3,5);
+            twist=-twist;
+        }
+        else{
+            twist  = Math.pow(gamepad1.right_stick_x+0.3,5);
+        }
 
 
-        if(gamepad1.a){
+//        double drive  = -gamepad1.left_stick_x*0.75;
+//        double strafe = gamepad1.left_stick_y;
+//        double twist  = -gamepad1.right_stick_x;
+
+
+        if(gamepad1.right_bumper){
             ServoPosition=1;
             servo.setPosition(0.25);
         }
 
-        if(gamepad1.b){
+        if(gamepad1.left_bumper){
             ServoPosition=0;
             servo.setPosition(0.08);
         }
+
 
 
 
@@ -72,7 +97,7 @@ public class Mecanum extends OpMode {
         double[] speeds = {
                 (drive + strafe + twist),
                 (drive - strafe - twist),
-                (drive - strafe + twist),
+                (drive - strafe +twist),
                 (drive + strafe - twist)
         };
 
@@ -95,7 +120,13 @@ public class Mecanum extends OpMode {
 
         // 300 units per rotation
         float elavatorPower=(gamepad1.right_trigger-gamepad1.left_trigger);
-        elevator.setPower(elavatorPower*0.50);
+        if(elavatorPower>0){
+            elevator.setPower(elavatorPower*0.80);
+        }
+        else{
+            elevator.setPower(elavatorPower*0.50);
+        }
+
 //        if(elevator.getCurrentPosition()<=800&&elevator.getCurrentPosition()>=0){
 //            elevator.setPower(elavatorPower);
 //        }
