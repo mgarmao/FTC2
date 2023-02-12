@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name="STA Drive", group="Iterative Opmode")
-@Disabled
 public class STA extends OpMode {
 
     /*
@@ -18,63 +17,91 @@ public class STA extends OpMode {
      */
 
     // declare and initialize four DcMotors.
+    private DcMotor frontLeft  = null;
+    private DcMotor frontRight = null;
     private DcMotor backLeft  = null;
     private DcMotor backRight = null;
     private DcMotor elevator  = null;
-    Servo   servo;
+    Servo   servo0;
+    Servo   servo1;
 
     int ServoPosition = 1;
     int elevatorZero=0;
     @Override
     public void init() {
+        frontLeft   = hardwareMap.get(DcMotor.class, "motor1");
+        frontRight  = hardwareMap.get(DcMotor.class, "motor2");
+        backRight  = hardwareMap.get(DcMotor.class, "motor3");
+        backRight  = hardwareMap.get(DcMotor.class, "motor4");
 
-        // Name strings must match up with the config on the Robot Controller
-        // app.
-        backLeft   = hardwareMap.get(DcMotor.class, "motor1");
-        backRight  = hardwareMap.get(DcMotor.class, "motor2");
+        servo0 = hardwareMap.get(Servo.class, "Servo0");
+        servo1 = hardwareMap.get(Servo.class, "Servo1");
+
         elevator   = hardwareMap.get(DcMotor.class, "elevator");
         elevatorZero =elevator.getCurrentPosition();
-        servo = hardwareMap.get(Servo.class, "Servo1");
 
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
     }
 
     @Override
     public void loop() {
-        double drive  = gamepad1.left_stick_y;
-        drive=drive*-1;
-        double twist  = gamepad1.right_stick_x;
+        //Drivetrain Section
+        double drive;
+        double strafe;
+        double twist;
 
-
-        if(gamepad2.a){
-            ServoPosition=1;
-            servo.setPosition(0.2);
+        if(gamepad1.right_bumper){
+            drive = gamepad1.left_stick_x;
+            strafe  = gamepad1.left_stick_y;
+            twist  = gamepad1.right_stick_x;
+        }
+        else{
+            drive = gamepad1.left_stick_x*0.5;
+            strafe  = gamepad1.left_stick_y*0.5;
+            twist  = gamepad1.right_stick_x*0.5;
         }
 
-        if(gamepad2.b){
-            ServoPosition=0;
-            servo.setPosition(-0.7);
-        }
-
-
-
-        // You may need to multiply some of these by -1 to invert direction of
-        // the motor.  This is not an issue with the calculations themselves.
         double[] speeds = {
-                (drive - twist),
-                (drive + twist),
+                (drive + strafe + twist),
+                (drive - strafe - twist),
+                (drive - strafe +twist),
+                (drive + strafe - twist)
         };
 
+        double max = Math.abs(speeds[0]);
+        for(int i = 0; i < speeds.length; i++) {
+            if ( max < Math.abs(speeds[i]) ) max = Math.abs(speeds[i]);
+        }
 
-        backLeft.setPower(speeds[0]);
-        backRight.setPower(speeds[1]);
+        if (max > 1) {
+            for (int i = 0; i < speeds.length; i++) speeds[i] /= max;
+        }
 
+        frontLeft.setPower(speeds[0]);
+        frontRight.setPower(speeds[1]);
+        backLeft.setPower(speeds[2]);
+        backRight.setPower(speeds[3]);
 
-        // 300 units per rotation
+        //Grabber Section
+        if(gamepad1.y){
+            servo0.setPosition(0.25);
+            servo1.setPosition(-0.30);
+        }
+
+        if(gamepad1.left_bumper){
+            ServoPosition=0;
+            servo0.setPosition(0.08);
+            servo1.setPosition(-0.17);
+        }
+
+        //Elevator Section
         float elavatorPower=(gamepad2.right_trigger-gamepad2.left_trigger);
         elevator.setPower(elavatorPower);
 
+        //Telemetry Section
         telemetry.addData("Gampad1 Left Y",gamepad1.left_stick_y);
         telemetry.addData("Gampad2 Left X",gamepad2.left_stick_x);
         telemetry.update();

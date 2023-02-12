@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,10 +7,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name="Mecanum Drive", group="Iterative Opmode")
+@Disabled
 public class Mecanum extends OpMode {
 
     /*
-     * The mecanum drivetrain involves four separate motors that spin in
+     * The mecanum drivetrain involveb s four separate motors that spin in
      * different directions and different speeds to produce the desired
      * movement at the desired speed.
      */
@@ -49,37 +51,24 @@ public class Mecanum extends OpMode {
         double drive;
         double strafe;
         double twist;
-        if(gamepad1.left_stick_x<0){
-            drive  = Math.pow(-gamepad1.left_stick_x+0.3,5);
-            drive=-drive;
+
+        if(gamepad1.right_bumper){
+            drive = gamepad1.left_stick_x;
+            strafe  = gamepad1.left_stick_y;
+            twist  = gamepad1.right_stick_x;
         }
         else{
-            drive  = Math.pow(gamepad1.left_stick_x+0.3,5);
+            drive = gamepad1.left_stick_x*0.5;
+            strafe  = gamepad1.left_stick_y*0.5;
+            twist  = gamepad1.right_stick_x*0.5;
         }
-
-        if(gamepad1.left_stick_y<0){
-            strafe  = Math.pow(-gamepad1.left_stick_y+0.3,5);
-            strafe=-strafe;
-        }
-        else{
-            strafe  = Math.pow(gamepad1.left_stick_y+0.3,5);
-        }
-
-        if(gamepad1.right_stick_x<0){
-            twist  = Math.pow(-gamepad1.right_stick_x+0.3,5);
-            twist=-twist;
-        }
-        else{
-            twist  = Math.pow(gamepad1.right_stick_x+0.3,5);
-        }
-
 
 //        double drive  = -gamepad1.left_stick_x*0.75;
 //        double strafe = gamepad1.left_stick_y;
 //        double twist  = -gamepad1.right_stick_x;
 
 
-        if(gamepad1.right_bumper){
+        if(gamepad1.y){
             ServoPosition=1;
             servo.setPosition(0.25);
         }
@@ -88,9 +77,6 @@ public class Mecanum extends OpMode {
             ServoPosition=0;
             servo.setPosition(0.08);
         }
-
-
-
 
         // You may need to multiply some of these by -1 to invert direction of
         // the motor.  This is not an issue with the calculations themselves.
